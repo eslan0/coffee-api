@@ -16,8 +16,8 @@ app.use("*", requestIdMiddleware);
 
 app.use("*", errorMiddleware);*/
 
-app.route("/api/v1/coffee", coffeeRoutes);
-app.route("/api/v1/category", categoryRoutes); /*
+app.route("/api/v1.0.5/coffee", coffeeRoutes);
+app.route("/api/v1.0.5/category", categoryRoutes); /*
 app.route("/api/v1/users", userRoutes);
 app.route("/api/v1/auth", authRoutes);*/
 

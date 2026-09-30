@@ -1,8 +1,8 @@
-import Router from "@koa/router";
+import { Hono } from "hono";
 import swaggerMiddleware from "@/middleware/swagger.middleware";
 
-const router = new Router();
+const swaggerRouter = new Hono();
 
-router.get("/docs", swaggerMiddleware());
+swaggerRouter.get("/docs", swaggerMiddleware());
 
-export default router;
+export { swaggerRouter };
