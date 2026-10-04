@@ -1,64 +1,60 @@
-# ADR 001 — Migração da Coffee API para Serverless/Edge
+# ADR 001 — Migration of Coffee API to Serverless/Edge
 
 - **Status:** Accepted
-- **Data:** 2026-08-05 (início da migração, conforme histórico disponível)
-- **Escopo:** arquitetura de execução e organização estrutural da Coffee API
-- **Decisões relacionadas:** Hono, Cloudflare Workers e Vertical Slice Architecture
+- **Date:** 2026-08-05 (migration start, per available history)
+- **Scope:** Execution architecture and structural organization of the Coffee API
+- **Related decisions:** Hono, Cloudflare Workers, and Vertical Slice Architecture
 
-## Contexto
+## Context
 
-A Coffee API originalmente possuía uma arquitetura baseada em um servidor HTTP tradicional, utilizando Koa. Durante a evolução do projeto surgiu a decisão de migrar a API para um modelo **Serverless/Edge**, tendo o **Cloudflare Workers** como ambiente de execução e o **Hono** como framework HTTP.
+The Coffee API originally featured an architecture based on a traditional HTTP server using Koa. As the project evolved, a decision was made to migrate the API to a **Serverless/Edge** model, utilizing **Cloudflare Workers** as the execution environment and **Hono** as the HTTP framework.
 
-A migração não foi tratada apenas como uma troca de framework. Ela exigiu rever a forma como a aplicação é inicializada, como as requisições são processadas, como dependências são organizadas e como a aplicação acessa recursos externos, especialmente considerando as características do runtime Serverless/Edge.
+The migration was not treated merely as a framework swap. It required rethinking how the application initializes, how requests are processed, how dependencies are organized, and how the application accesses external resources—particularly given the specific characteristics of the Serverless/Edge runtime.
 
-Também foi decidido adotar **Vertical Slice Architecture** como princípio de organização do código. Essa decisão acompanha a migração porque permite organizar a aplicação por funcionalidades/feature slices, reduzindo a dependência de uma estrutura global baseada exclusivamente em camadas técnicas.
+It was also decided to adopt **Vertical Slice Architecture** as the principle for code organization. This decision aligns with the migration because it allows the application to be organized by functionality (feature slices), reducing reliance on a global structure based exclusively on technical layers.
 
-## Decisão
+## Decision
 
-A Coffee API será executada como uma aplicação **Serverless/Edge**, utilizando **Cloudflare Workers** como ambiente de execução e **Hono** como framework HTTP.
+The Coffee API will run as a **Serverless/Edge** application, utilizing **Cloudflare Workers** as the execution environment and **Hono** as the HTTP framework.
 
-A aplicação não terá como unidade principal de execução um servidor Node.js tradicional iniciado e mantido pelo processo da aplicação. O ponto de entrada deverá ser compatível com o modelo de execução do Workers, no qual a plataforma recebe as requisições e invoca a aplicação conforme necessário.
+The application's primary unit of execution will not be a traditional Node.js server started and maintained by the application process. The entry point must be compatible with the Workers execution model, wherein the platform receives requests and invokes the application as needed.
 
-A arquitetura também adotará **Vertical Slice Architecture** como estratégia principal de organização das funcionalidades.
+The architecture will also adopt **Vertical Slice Architecture** as the primary strategy for organizing functionality.
 
-A migração deve preservar as responsabilidades de negócio existentes sempre que possível, mas adaptar as fronteiras técnicas às características do novo runtime.
+The migration must preserve existing business responsibilities whenever possible while adapting technical boundaries to the characteristics of the new runtime. ## Motivations
 
-## Motivações
+The recorded motivations for the migration are:
 
-As motivações registradas para a migração são:
+1. Adopting a Serverless/Edge model for API execution.
+2. Using Cloudflare Workers infrastructure as the execution environment.
+3. Using Hono as the HTTP framework suited to the Workers/Edge environment.
+4. Avoiding the carry-over of assumptions specific to a traditional Node.js server into the new environment.
+5. Reorganizing the application around features using Vertical Slice Architecture.
+6. Leveraging the migration to establish an architecture better suited to the chosen execution model.
 
-1. Adotar um modelo Serverless/Edge para a execução da API.
-2. Utilizar a infraestrutura do Cloudflare Workers como ambiente de execução.
-3. Utilizar Hono como framework HTTP adequado ao ambiente de Workers/Edge.
-4. Evitar transportar para o novo ambiente pressupostos específicos de um servidor Node.js tradicional.
-5. Reorganizar a aplicação em torno das funcionalidades por meio de Vertical Slice Architecture.
-6. Aproveitar a migração para estabelecer uma arquitetura mais adequada ao modelo de execução escolhido.
+> **Historical note:** Available records document the decision to migrate to Serverless/Edge and the adoption of Hono/Cloudflare, but do not record formal cost, latency, or performance metrics used as quantitative justification. Therefore, these metrics are not considered documented motivations for this decision.
 
-> **Nota histórica:** o histórico disponível registra a decisão de migrar para Serverless/Edge e a adoção de Hono/Cloudflare, mas não registra métricas formais de custo, latência ou desempenho que tenham sido usadas como justificativa quantitativa. Portanto, essas métricas não são consideradas motivação documentada desta decisão.
+## Evolution of the decision
 
-## Evolução da decisão
+### 1. Previous architecture based on Koa
 
-### 1. Arquitetura anterior baseada em Koa
+The Coffee API used Koa as its HTTP framework and featured a traditional web application structure, with components such as `app.ts`, middleware, and a separation of controllers, services, and models.
 
-A Coffee API utilizava Koa como framework HTTP e possuía uma estrutura tradicional de aplicação web, com componentes como `app.ts`, middlewares e uma organização separada para controllers, services e models.
+This architecture operated like a traditional server-based application.
 
-Essa arquitetura funcionava como uma aplicação de servidor tradicional.
+### 2. Decision to migrate to Serverless
 
-### 2. Decisão de migrar para Serverless
+Migration of the application to Serverless/Edge began in August 2026.
 
-Em agosto de 2026 foi iniciada a migração da aplicação para Serverless/Edge.
+The goal shifted to building the API specifically for the Cloudflare Workers runtime, rather than retrofitting an existing Koa/Node.js application for that environment.
 
-O objetivo passou a ser construir a API diretamente considerando o runtime do Cloudflare Workers, em vez de adaptar posteriormente uma aplicação Koa/Node.js para esse ambiente.
+A conscious decision was made to rebuild the API's infrastructure from scratch—preserving useful architectural patterns and domain knowledge—without treating the Koa code as a mandatory implementation for the new runtime.
 
-Foi explicitamente decidido reiniciar a parte de infraestrutura da API de forma limpa, preservando a arquitetura e o conhecimento de domínio que fossem úteis, mas sem tratar o código Koa como a implementação obrigatória do novo runtime.
+### 3. Choice of Hono
 
-### 3. Escolha do Hono
+Hono was selected as the HTTP framework for the new implementation. Routes are now defined using `Hono` instances, and handlers utilize the `Context` provided by the framework.
 
-Hono foi escolhido como framework HTTP para a nova implementação.
-
-As rotas passaram a ser definidas por meio de instâncias de `Hono`, e os handlers passaram a utilizar o `Context` fornecido pelo framework.
-
-Exemplo conceitual da nova abordagem:
+Conceptual example of the new approach:
 
 ```ts
 const categoryRoutes = new Hono();
@@ -66,137 +62,140 @@ const categoryRoutes = new Hono();
 categoryRoutes.get("/categories", CategoryController.index);
 ```
 
-A implementação definitiva deve seguir a estrutura atualmente existente no código, e este exemplo serve apenas para registrar a evolução histórica.
+The final implementation must adhere to the existing code structure; this example serves merely to document the evolution.
 
-### 4. Adaptação de controllers e services
+### 4. Adapting controllers and services
 
-A migração exigiu adaptar controllers e services que anteriormente estavam associados ao modelo de execução do Koa.
+The migration required adapting controllers and services that were previously tied to the Koa execution model.
 
-No Hono, handlers recebem o `Context` da requisição e trabalham com mecanismos próprios do framework, como:
+In Hono, handlers receive the request `Context` and utilize the framework's built-in mechanisms, such as:
 
-- `c.req` para acessar dados da requisição;
-- `c.req.param()` para parâmetros de rota;
-- `c.req.json()` para corpos JSON;
-- métodos de resposta do contexto do Hono.
+- `c.req` to access request data;
+- `c.req.param()` for route parameters;
+- `c.req.json()` for JSON bodies;
+- Hono context response methods.
 
-Os services continuam sendo uma possibilidade para encapsular regras de aplicação, mas a arquitetura deixa de exigir uma separação global rígida baseada exclusivamente em `controllers/`, `services/` e `models/`.
+Services remain a viable option for encapsulating application logic, but the architecture no longer mandates a rigid global separation based exclusively on `controllers/`, `services/`, and `models/`.
 
-### 5. Adoção de Vertical Slice Architecture
+### 5. Adopting Vertical Slice Architecture
 
-Durante a definição da nova arquitetura foi decidido adotar **Vertical Slice Architecture**.
+During the definition of the new architecture, the decision was made to adopt **Vertical Slice Architecture**.
 
-A unidade principal de organização passa a ser a funcionalidade, e não apenas o tipo técnico do arquivo.
+The primary unit of organization becomes the feature itself, rather than the technical file type.
 
-Assim, conceitos como controller/handler, service/use case, validação e acesso a dados podem permanecer próximos da funcionalidade à qual pertencem quando isso fizer sentido.
+Consequently, concepts such as controllers/handlers, services/use cases, validation, and data access can remain close to the feature they belong to, whenever it makes sense to do so.
 
-A adoção de Vertical Slice não significa que classes como services, repositories ou models sejam proibidas. Significa que sua localização e responsabilidade devem ser determinadas pela feature e pelo fluxo da aplicação, e não por uma obrigação de criar diretórios globais para cada tipo de componente.
+Adopting Vertical Slice Architecture does not mean that classes like services, repositories, or models are prohibited. It means that their location and responsibility should be determined by the feature and the application flow, rather than by a requirement to create global directories for each component type.
 
-### 6. Testes e validação inicial
+### 6. Initial testing and validation
 
-Antes de avançar na migração arquitetural, foi estabelecida uma configuração de testes utilizando **Vitest**, com suporte aos aliases do TypeScript por meio de `vite-tsconfig-paths`.
+Before proceeding with the architectural migration, a test setup was established using **Vitest**, with support for TypeScript aliases via `vite-tsconfig-paths`.
 
-A etapa inicial da nova configuração foi concluída com sucesso, com os testes passando e a API em execução.
+The initial phase of the new configuration was successfully completed, with tests passing and the API running.
 
-Essa validação serviu como base para continuar a evolução da implementação Serverless/Hono.
+This validation served as the foundation for continuing the evolution of the Serverless/Hono implementation.
 
-## Consequências positivas
+## Positive outcomes
 
-### Compatibilidade com o modelo Serverless/Edge
+### Compatibility with the Serverless/Edge model
 
-A aplicação passa a ser projetada diretamente para um runtime de Workers, reduzindo a necessidade de manter abstrações específicas de um servidor Node.js tradicional.
+The application is now designed specifically for a Workers runtime, reducing the need to maintain abstractions specific to a traditional Node.js server.
 
-### Separação entre domínio e infraestrutura
+### Separation of domain and infrastructure
 
-A migração incentiva a identificação das responsabilidades que pertencem ao domínio/aplicação e das que dependem do ambiente de execução.
+The migration encourages distinguishing between responsibilities belonging to the domain/application and those dependent on the execution environment.
 
-### Organização por funcionalidade
+### Organization by feature
 
-A Vertical Slice Architecture permite que uma funcionalidade seja entendida de maneira mais localizada, reduzindo a necessidade de navegar por vários diretórios técnicos globais para compreender um fluxo.
+Vertical Slice Architecture allows a feature to be understood in a localized manner, reducing the need to navigate through multiple global technical directories to comprehend a specific flow.
 
-### Evolução independente das features
+### Independent feature evolution
 
-Funcionalidades diferentes podem evoluir com menor acoplamento estrutural entre si, desde que suas interfaces e dependências permaneçam bem definidas.
+Different features can evolve with reduced structural coupling, provided their interfaces and dependencies remain well-defined.
 
-## Consequências e trade-offs
+## Consequences and trade-offs
 
-### Mudança do modelo mental de execução
+### Shift in execution mental model
 
-Desenvolvedores acostumados com um servidor Node.js persistente precisam considerar as características do runtime Serverless/Edge.
+Developers accustomed to a persistent Node.js server must consider the characteristics of the Serverless/Edge runtime.
 
-Não se deve assumir que estado em memória do processo, inicialização única da aplicação ou recursos específicos do Node.js tradicional estarão disponíveis da mesma forma.
+One should not assume that in-memory process state, one-time application initialization, or specific features of traditional Node.js will be available in the same way.
 
-### Adaptação de dependências
+### Dependency adaptation
 
-Dependências utilizadas pela aplicação precisam ser compatíveis com o ambiente escolhido. Bibliotecas que dependem de APIs específicas do Node.js podem exigir substituição ou adaptação.
+Dependencies used by the application must be compatible with the chosen environment. Libraries relying on specific Node.js APIs may require replacement or adaptation.
 
-### Mudança estrutural
+### Structural change
 
-A migração pode exigir mover ou reestruturar componentes que anteriormente estavam organizados em diretórios globais como `controllers`, `services` e `models`.
+Migration may require moving or restructuring components that were previously organized in global directories such as `controllers`, `services`, and `models`.
 
-### Maior atenção à infraestrutura
+### Greater focus on infrastructure
 
-Configurações de ambiente, bindings, banco de dados, secrets e recursos externos precisam ser tratados de acordo com o modelo do Cloudflare Workers.
+Environment configurations, bindings, databases, secrets, and external resources need to be handled in accordance with the Cloudflare Workers model.
 
-### Migração incremental
+### Incremental migration
 
-Durante a migração, pode existir temporariamente uma mistura de conceitos da arquitetura anterior e da nova arquitetura. Essa situação deve ser tratada como estado de transição e não como objetivo arquitetural final.
+During migration, a mix of concepts from the previous and new architectures may temporarily coexist. This situation should be treated as a transitional state rather than the final architectural goal.
 
-## Alternativas consideradas
+## Alternatives considered
 
-### Permanecer com Koa em um servidor tradicional
+### Staying with Koa on a traditional server
 
-Não foi escolhida como arquitetura final. O projeto decidiu prosseguir com Serverless/Edge e construir a nova implementação considerando o runtime escolhido desde o início.
+This was not chosen as the final architecture. The project decided to proceed with Serverless/Edge and build the new implementation with the chosen runtime in mind from the start.
 
-### Manter uma arquitetura global estritamente em camadas
+### Maintaining a strictly layered global architecture
 
-A estrutura tradicional baseada em diretórios globais de `controllers`, `services`, `models` e similares foi considerada durante a evolução do projeto, mas a decisão final foi utilizar Vertical Slice Architecture como organização principal.
+The traditional structure based on global directories for `controllers`, `services`, `models`, and the like was considered during the project's evolution, but the final decision was to use Vertical Slice Architecture as the primary organizational approach.
 
-Isso não elimina camadas ou responsabilidades; apenas evita que a estrutura física do projeto seja determinada exclusivamente por categorias técnicas globais.
+This does not eliminate layers or responsibilities; it simply prevents the project's physical structure from being determined exclusively by global technical categories.
 
-### Adaptar o Koa diretamente para o ambiente Serverless
+### Adapting Koa directly for the Serverless environment
 
-Essa abordagem não foi adotada como estratégia principal. O projeto optou por tratar a nova API como uma implementação Serverless/Hono, em vez de preservar o ciclo de vida de uma aplicação Koa tradicional.
+This approach was not adopted as the primary strategy. The project opted to treat the new API as a Serverless/Hono implementation rather than preserving the lifecycle of a traditional Koa application.
 
-## Impacto sobre a API
+## Impact on the API
 
-A migração arquitetural não implica, por si só, uma mudança no contrato funcional da API.
+The architectural migration does not, in itself, imply a change to the API's functional contract.
 
-Endpoints, regras de negócio, autenticação e formatos de resposta devem ser preservados durante a migração sempre que não houver uma decisão explícita de alteração.
+Endpoints, business rules, authentication, and response formats must be preserved during the migration unless there is an explicit decision to change them.
 
-Quando uma mudança de comportamento for necessária devido ao novo runtime ou a uma decisão de projeto, ela deve ser documentada separadamente.
+When a change in behavior is required due to the new runtime or a design decision, it must be documented separately.
 
-## Regras decorrentes desta decisão
+## Rules resulting from this decision
 
-1. O código novo deve ser compatível com o runtime alvo do Cloudflare Workers.
-2. Não devem ser introduzidas dependências Node.js incompatíveis com Workers sem uma justificativa técnica explícita.
-3. O ciclo de vida do servidor tradicional não deve ser assumido como disponível.
-4. Novas funcionalidades devem ser organizadas preferencialmente como slices verticais.
-5. Componentes compartilhados devem ser extraídos somente quando houver uma necessidade real de compartilhamento.
-6. A infraestrutura específica do Cloudflare deve permanecer separada das regras de negócio sempre que possível.
-7. Mudanças no contrato público da API devem ser documentadas independentemente desta decisão arquitetural.
-8. O código atual é a fonte de verdade para o estado da implementação; este ADR registra a decisão e seu contexto histórico, não substitui a implementação.
+1. New code must be compatible with the target Cloudflare Workers runtime.
+2. Node.js dependencies incompatible with Workers must not be introduced without explicit technical justification.
+3. The traditional server lifecycle should not be assumed to be available.
+4. New features should preferably be organized as vertical slices.
+5. Shared components should be extracted only when there is a genuine need for sharing.
+6. Cloudflare-specific infrastructure should remain separate from business rules whenever possible.
+7. Changes to the public API contract must be documented independently of this architectural decision.
+8. The current code is the source of truth for the implementation state; this ADR records the decision and its historical context but does not replace the implementation.
 
-## Estado atual
+## Current Status
 
-Esta decisão permanece como base arquitetural da migração da Coffee API para Serverless/Edge.
+This decision serves as the architectural foundation for migrating the Coffee API to Serverless/Edge.
 
-A implementação deve ser avaliada continuamente para garantir que a estrutura física do projeto esteja convergente com as decisões de **Hono + Cloudflare Workers + Vertical Slice Architecture**, evitando manter estruturas herdadas do Koa apenas por compatibilidade histórica.
+The implementation must be continuously evaluated to ensure the project's physical structure aligns with the **Hono + Cloudflare Workers + Vertical Slice Architecture** decisions, avoiding the retention of legacy Koa structures solely for the sake of historical compatibility.
 
-## Histórico de alterações deste ADR
+## ADR Change History
 
-| Data | Alteração |
+| Date | Change |
 | --- | --- |
-| 2026-08-05 | Início da migração da API para Serverless/Edge e definição de uma nova implementação baseada no runtime alvo. |
-| 2026-08-07 | Definição das rotas utilizando Hono e adaptação da camada HTTP para o modelo de handlers/contexto do Hono. |
-| 2026-08-12 | Continuidade da adaptação das rotas, autenticação/autorização e controllers para Hono. |
-| 2026-08-21 | Evolução da abordagem de controllers para execução Serverless/Cloudflare. |
-| 2026-08-22 | Adaptação de services existentes para a nova arquitetura Hono. |
-| 2026-09-30 | Consolidação desta documentação como ADR, reunindo as decisões e recorrências registradas no histórico disponível do projeto. |
+| 2026-08-05 | Initiation of API migration to Serverless/Edge and definition of a new implementation based on the target runtime. |
+| 2026-08-07 | Definition of routes using Hono and adaptation of the HTTP layer to the Hono handler/context model. |
+| 2026-08-12 | Continued adaptation of routes, authentication/authorization, and controllers to Hono. |
+| 2026-08-21 | Evolution of the controller approach for Serverless/Cloudflare execution. |
+| 2026-08-22 | Adaptation of existing services to the new Hono architecture. |
+| 2026-09-30 | Consolidation of this documentation as an ADR, gathering decisions and recurring points recorded in the project's available history. |
 
-## Referências internas
+## Internal references
 
-- `architecture/` — descrição da arquitetura atual.
-- `deployment/` — detalhes do ambiente Serverless/Cloudflare.
-- `testing/` — estratégia e configuração de testes.
-- `decisions/002-hono.md` — decisão específica sobre Hono, caso criada.
-- `decisions/003-vertical-slice.md` — decisão específica sobre Vertical Slice Architecture, caso criada.
+- `architecture/` — description of the current architecture.
+- `deployment/` — details of the Serverless/Cloudflare environment.
+- `testing/` — testing strategy and configuration.
+- `decisions/002-hono.md` — specific decision regarding Hono, if created.
+- `decisions/003-vertical-slice.md` — specific decision regarding Vertical Slice Architecture, if created.
+
+---
+[← Voltar para o README](../../README.md)

@@ -1,12 +1,16 @@
-# Estrutura geral de arquivos do projeto
+# Structure
+
+## Documents
+
+Technical and business documentation, architecture diagrams, architecture decision records (ADRs), database schemas, and OpenAPI specifications.
 
 ```bash
 coffee-api/
-├── docs/                           # Documentação técnica e de negócio
+├── docs/
 │   ├── architecture/
 │   │   ├── overview.md
 │   │   ├── vertical-slice.md
-│   │   └── order-state-machine.md  # Diagrama de estados do pedido
+│   │   └── order-state-machine.md
 │   ├── database/
 │   │   ├── schema.md
 │   │   └── migrations.md
@@ -20,78 +24,144 @@ coffee-api/
 │   └── openapi/
 │       ├── openapi.yaml
 │       └── api-spec.yaml
-├── scripts/                   # Seeds de cardápio e utilitários
+```
+
+## Script
+
+Utilities and automation scripts, such as database initialization, data seeding, and fixes.
+
+```bash
+coffee-api/
+├── scripts/
 │   ├── fix-alias.js
 │   └── seed-menu.js
+```
+
+## Config
+
+Core application configuration and static/runtime validation of environment variables using Zod.
+
+```bash
+coffee-api/
 ├── src/ 
-│   ├── config/                # Variáveis de ambiente com validação Zod
+│   ├── config/
 │   │   └── env.ts
-│   ├── infrastructure/        # Comunicação com serviços externos
+```
+
+## Infrastructure
+
+Communication and integration with external services, including database clients (Postgres/Drizzle/Supabase), logging systems, notification delivery (Push and WhatsApp), and payment gateways (Mercado Pago, Stripe, Pix).
+
+```bash
+coffee-api/
+├── src/
+│   ├── infrastructure/
 │   │   ├── database/
-│   │   │   ├── client.ts      # Instância HTTP do Postgres/Drizzle/Supabase
+│   │   │   ├── client.ts
 │   │   │   ├── migrations/
 │   │   │   └── seed.ts
 │   │   ├── logger/
 │   │   │   └── logger.ts
-│   │   ├── notifications/     # Push Notification / WhatsApp API
+│   │   ├── notifications/
 │   │   │   └── push.service.ts
-│   │   └── payment/           # Gateway de Pagamento (Mercado Pago, Stripe, Pix)
+│   │   └── payment/
 │   │       └── payment-gateway.ts
-│   ├── middleware/            # Interceptadores globais
+```
+
+## Middleware
+
+Global HTTP interceptors and middleware for authentication, centralized error handling, request tracing, security headers, and schema validation.
+
+```bash
+coffee-api/
+├── src/
+│   ├── middleware/
 │   │   ├── auth.middleware.ts
 │   │   ├── error.middleware.ts
 │   │   ├── request-id.middleware.ts
 │   │   ├── security.middleware.ts
 │   │   └── validate.middleware.ts
-│   ├── modules/               # Módulos do Domínio de Delivery
-│   │   ├── auth/              # Login, Cadastro e Refresh Token
+```
+
+## Modules
+
+Application domain modules organized by vertical slice. These contain business logic for user authentication, catalog/menu management, order lifecycle creation and updates, geolocation-based delivery fee calculation, payment and webhook processing, and store operating hours management.
+
+```bash
+coffee-api/
+├── src/
+│   ├── modules/
+│   │   ├── auth/
 │   │   │   ├── login/
 │   │   │   ├── register/
 │   │   │   └── me/
-│   │   ├── catalog/           # Gestão do Cardápio (Produtos, Categorias, Opcionais)
+│   │   ├── catalog/
 │   │   │   ├── list-products/
 │   │   │   │   ├── handler.ts
 │   │   │   │   ├── schema.ts
 │   │   │   │   └── dto.ts
 │   │   │   ├── get-product/
-│   │   │   └── common/        # Mapeadores e repositório específicos do catálogo
+│   │   │   └── common/
 │   │   │       ├── catalog.repository.ts
 │   │   │       └── catalog.types.ts
-│   │   ├── orders/            # Coração do Delivery (Criação e Fluxo do Pedido)
+│   │   ├── orders/
 │   │   │   ├── create-order/
-│   │   │   │   ├── handler.ts # Valida estoque, adicionais, calcula taxa e salva
+│   │   │   │   ├── handler.ts
 │   │   │   │   ├── schema.ts
 │   │   │   │   └── dto.ts
-│   │   │   ├── update-status/ # Cozinha/Entregador muda status (ex: EM_PREPARO -> A_CAMINHO)
+│   │   │   ├── update-status/
 │   │   │   │   ├── handler.ts
-│   │   │   │   └── state-machine.ts # Garante transições de status válidas
+│   │   │   │   └── state-machine.ts
 │   │   │   ├── get-order/
-│   │   │   ├── list-active-orders/  # Rota em Realtime/Polling para a tela da cozinha
+│   │   │   ├── list-active-orders/
 │   │   │   └── common/
 │   │   │       ├── order.repository.ts
 │   │   │       └── order.types.ts
-│   │   ├── delivery/          # Cálculo de Frete e Endereços
+│   │   ├── delivery/
 │   │   │   ├── calculate-fee/
-│   │   │   │   ├── handler.ts # Valida CEP/Coordenadas e retorna taxa + tempo estimado
+│   │   │   │   ├── handler.ts
 │   │   │   │   └── schema.ts
 │   │   │   └── address/
-│   │   ├── payments/          # Webhooks e Processamento financeiro
+│   │   ├── payments/
 │   │   │   ├── process-pix/
 │   │   │   └── webhook/
-│   │   │       └── handler.ts # Recebe confirmação de pagamento do gateway
-│   │   └── store/             # Configurações do Estabelecimento
-│   │       ├── get-status/    # Retorna se a cafeteria está Aberta ou Fechada no momento
+│   │   │       └── handler.ts
+│   │   └── store/
+│   │       ├── get-status/
 │   │       └── update-hours/
-│   └── shared/                # Tipos, utilitários e erros globais
+```
+
+## Shared
+
+Shared modules, imports, reusable helpers (such as geographic calculations and currency formatting), global TypeScript types, and custom error classes.
+
+```bash
+coffee-api/
+├── src/
+│   └── shared/
 │       ├── errors/
 │       ├── types/
 │       ├── helpers/
 │       └── utils/
-│           ├── geo.ts         # Cálculo de distância/raio de entrega 
-│           └── money.ts       # Tratamento de centavos/moeda
-├── tests/                     # Testes de unidades
+│           ├── geo.ts
+│           └── money.ts
+```
+
+## Test
+
+Directory reserved for the suite of automated unit, integration, and end-to-end (E2E) tests.
+
+```bash
+coffee-api/
+├── tests/
 │   ├── integration/
 │   └── e2e/
+```
+
+## Configuration files
+
+```bash
+coffee-api/
 ├── .env
 ├── .env.example
 ├── .gitignore

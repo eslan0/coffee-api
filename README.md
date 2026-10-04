@@ -1,6 +1,6 @@
 # Coffee API
 
-Coffee API is a compact RESTful API project for small businesses. Developed with Node.js, Koa.js, MongoDB, and TypeScript.
+Coffee API is a compact RESTful API project for small businesses. Developed with Hono.js, Postgres and TypeScript.
 
 > C.R.U.D, Filter, Paginate, Sort and Search API
 
@@ -15,21 +15,18 @@ Coffee API is a compact RESTful API project for small businesses. Developed with
 - [Security](#security)
 - [Variables](#variables)
 - [Collaboration](#collaboration)
-- [Author](#author)
 
 ## Preview
 
-[API Base URL](http://localhost:5000/v2.0.4)
+[API Base URL](http://localhost:5000/v1.0.5)
 
-[Swagger Docs](http://localhost:5000/v2.0.4/docs)
-
-[API Preview](https://test-api.herokuapp.com)
+[Swagger Docs](http://localhost:5000/v1.0.5/docs)
 
 ## Technologies
 
 - Node.js
-- Koa.js
-- MongoDB (Mongoose)
+- Hono.js
+- Postgres
 - TypeScript
 - JSON Web Token (JWT)
 - bcryptjs
@@ -40,14 +37,37 @@ Coffee API is a compact RESTful API project for small businesses. Developed with
 Interactive API documentation is available via Swagger:
 
 ```bash
-http://localhost:5000/2.0.4/docs
+http://localhost:5000/v1.0.5/docs
 ```
 
-Features:
+Browse the links below to access detailed project documentation:
 
-- Test endpoints directly from the browser
-- View request/response schemas
-- Authenticate using JWT
+### Architecture
+
+- [Overview](docs/architecture/overview.md)
+- [Vertical Slice Architecture](docs/architecture/vertical-slice.md)
+- [Order State Machine](docs/architecture/order-state-machine.md)
+
+### Database
+
+- [Schema and Data Model](docs/database/schema.md)
+- [Migration History](docs/database/migrations.md)
+
+### Architecture Decision Records (ADRs)
+
+- [001 - Serverless Architecture](docs/decisions/001-serverless.md)
+- [002 - Authentication Strategy](docs/decisions/002-authentication.md)
+- [003 - Global Error Handling](docs/decisions/003-error-handling.md)
+
+### Deployment and Infrastructure
+
+- [Environment Variables](docs/deployment/environment.md)
+- [CI/CD Pipeline](docs/deployment/ci-cd.md)
+
+### API Specification
+
+- [OpenAPI Spec (YAML)](docs/openapi/openapi.yaml)
+- [API Documentation](docs/openapi/api-spec.yaml)
 
 ## Routes
 
@@ -95,10 +115,10 @@ Create a `.env` file based on `.env.example`
 npm run dev
 ```
 
-5.**Build for production**
+5.**Deploy for production**
 
 ```bash
-npm run build
+npm run deploy
 ```
 
 ## Features
@@ -116,8 +136,6 @@ npm run build
 - Search for products
 - Add products to their basket
 - Checkout total payment
-- Checkout order page
-- Products pagination
 
 ### (Admin)
 
@@ -137,14 +155,13 @@ npm run build
 - Password hashing with bcrypt
 - Rate limiting global
 - HTTP security headers (Helmet)
-- Content Security Policy (CSP)
+- Cross-Origin Resource Sharing (CORS)
 
 ## Variables
 
 Create a `.env` file and configure:
 
 ```env
-MONGODB_URI=
 USE_MEMORY_DB=
 TOKEN_SECRET=
 API_URL=
@@ -175,14 +192,8 @@ CLOUDINARY_API_SECRET=
 
 To run this project, you will need to add the following environment variables to your `.env` file (check `.env.example` file for more examples)
 
----
-
-### Collaboration
+## Collaboration
 
 [Es](https://github.com/Eslan0)
 
-### Author
-
 [Elias Abreu](https://github.com/eliasabrell)
-
----
