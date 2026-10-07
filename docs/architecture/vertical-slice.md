@@ -18,12 +18,9 @@ coffee-api/
 │   │   ├── 001-serverless.md
 │   │   ├── 002-authentication.md
 │   │   └── 003-error-handling.md
-│   ├── deployment/
-│   │   ├── environment.md
-│   │   └── ci-cd.md
-│   └── openapi/
-│       ├── openapi.yaml
-│       └── api-spec.yaml
+│   └── deployment/
+│       ├── environment.md
+│       └── ci-cd.md
 ```
 
 ## Script
@@ -43,8 +40,10 @@ Core application configuration and static/runtime validation of environment vari
 
 ```bash
 coffee-api/
-├── src/ 
+├── src/
 │   ├── config/
+│   │   ├── database.ts
+│   │   ├── swaggert.ts
 │   │   └── env.ts
 ```
 
@@ -80,6 +79,7 @@ coffee-api/
 │   │   ├── error.middleware.ts
 │   │   ├── request-id.middleware.ts
 │   │   ├── security.middleware.ts
+│   │   ├── upload.middleware.ts
 │   │   └── validate.middleware.ts
 ```
 
@@ -175,4 +175,5 @@ coffee-api/
 ```
 
 ---
+
 [← Voltar para o README](../../README.md)

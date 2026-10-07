@@ -180,13 +180,13 @@ The implementation must be continuously evaluated to ensure the project's physic
 
 ## ADR Change History
 
-| Date | Change |
-| --- | --- |
-| 2026-08-05 | Initiation of API migration to Serverless/Edge and definition of a new implementation based on the target runtime. |
-| 2026-08-07 | Definition of routes using Hono and adaptation of the HTTP layer to the Hono handler/context model. |
-| 2026-08-12 | Continued adaptation of routes, authentication/authorization, and controllers to Hono. |
-| 2026-08-21 | Evolution of the controller approach for Serverless/Cloudflare execution. |
-| 2026-08-22 | Adaptation of existing services to the new Hono architecture. |
+| Date       | Change                                                                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-05 | Initiation of API migration to Serverless/Edge and definition of a new implementation based on the target runtime.                   |
+| 2026-08-07 | Definition of routes using Hono and adaptation of the HTTP layer to the Hono handler/context model.                                  |
+| 2026-08-12 | Continued adaptation of routes, authentication/authorization, and controllers to Hono.                                               |
+| 2026-08-21 | Evolution of the controller approach for Serverless/Cloudflare execution.                                                            |
+| 2026-08-22 | Adaptation of existing services to the new Hono architecture.                                                                        |
 | 2026-09-30 | Consolidation of this documentation as an ADR, gathering decisions and recurring points recorded in the project's available history. |
 
 ## Internal references
@@ -198,4 +198,5 @@ The implementation must be continuously evaluated to ensure the project's physic
 - `decisions/003-vertical-slice.md` — specific decision regarding Vertical Slice Architecture, if created.
 
 ---
+
 [← Voltar para o README](../../README.md)

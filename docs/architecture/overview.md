@@ -14,16 +14,14 @@ coffee-api/
 │   │   ├── 001-serverless.md
 │   │   ├── 002-authentication.md
 │   │   └── 003-error-handling.md
-│   ├── deployment/
-│   │   ├── environment.md
-│   │   └── ci-cd.md
-│   └── openapi/
-│       ├── openapi.yaml
-│       └── api-spec.yaml
+│   └── deployment/
+│       ├── environment.md
+│       └── ci-cd.md
+
 ├── scripts/                   # Seeds de cardápio e utilitários
 │   ├── fix-alias.js
 │   └── seed-menu.js
-├── src/ 
+├── src/
 │   ├── config/                # Variáveis de ambiente com validação Zod
 │   │   └── env.ts
 │   ├── infrastructure/        # Comunicação com serviços externos
@@ -87,7 +85,7 @@ coffee-api/
 │       ├── types/
 │       ├── helpers/
 │       └── utils/
-│           ├── geo.ts         # Cálculo de distância/raio de entrega 
+│           ├── geo.ts         # Cálculo de distância/raio de entrega
 │           └── money.ts       # Tratamento de centavos/moeda
 ├── tests/                     # Testes de unidades
 │   ├── integration/
@@ -105,4 +103,5 @@ coffee-api/
 ```
 
 ---
+
 [← Voltar para o README](../../README.md)
