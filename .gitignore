@@ -24,6 +24,8 @@ $RECYCLE.BIN/
 logs
 *.log
 .tmp
+pnpm-debug.log*
+lerna-debug.log*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -138,6 +140,8 @@ typings/
 
 # Environment Variables
 .env
+.env.production
+.dev.vars
 
 # Parcel-bundler Cache
 .cache
@@ -151,3 +155,14 @@ typings/
 # VuePress Build Output
 .vuepress/dist
 .aider*
+
+# dev
+.yarn/
+!.yarn/releases
+.vscode/*
+!.vscode/launch.json
+!.vscode/*.code-snippets
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf
+pnpm-lock.yaml

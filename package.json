@@ -20,7 +20,8 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write .",
-    "fix-alias": "node scripts/fix-alias.js"
+    "fix-alias": "node scripts/fix-alias.js",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -31,10 +32,13 @@
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.3",
     "streamifier": "^0.1.1",
-    "swagger-jsdoc": "^6.2.8"
+    "swagger-jsdoc": "^6.2.8",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260810.1",
+    "@hono/zod-openapi": "^1.6.3",
+    "@scalar/hono-api-reference": "^0.12.9",
     "@types/bcrypt": "^6.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.10",
