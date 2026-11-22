@@ -17,7 +17,6 @@ coffee-api/
 │   └── deployment/
 │       ├── environment.md
 │       └── ci-cd.md
-
 ├── scripts/                   # Seeds de cardápio e utilitários
 │   ├── fix-alias.js
 │   └── seed-menu.js
@@ -80,6 +79,13 @@ coffee-api/
 │   │   └── store/             # Configurações do Estabelecimento
 │   │       ├── get-status/    # Retorna se a cafeteria está Aberta ou Fechada no momento
 │   │       └── update-hours/
+│   ├── routes/                # Rotas gerais para escorpo
+│   │   ├── auth.routes.ts
+│   │   ├── catalog.routes.ts
+│   │   ├── orders.routes.ts
+│   │   ├── delivery.routes.ts
+│   │   ├── payments.routes.ts
+│   │   └── store.routes.ts
 │   └── shared/                # Tipos, utilitários e erros globais
 │       ├── errors/
 │       ├── types/
