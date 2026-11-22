@@ -1,9 +1,9 @@
 import { Context } from "koa";
 import createHttpError, { HttpError } from "http-errors";
-import envConfig from "@/config/env";
+import { env } from "@/config/env";
 
 // middleware for global error
-const errorMiddleware = () => {
+export const errorMiddleware = () => {
   const defaultMessage = "Internal Server Error";
   const defaultStatus = 500;
 
@@ -15,7 +15,7 @@ const errorMiddleware = () => {
         throw createHttpError(404, "Resource Not Found");
       }
     } catch (error: HttpError | any) {
-      const isProduction = envConfig.NODE_ENV === "production";
+      const isProduction = env.NODE_ENV === "production";
 
       const statusCode = error.status || error.statusCode || defaultStatus;
       ctx.status = statusCode;
@@ -43,5 +43,3 @@ const errorMiddleware = () => {
     }
   };
 };
-
-export default errorMiddleware;

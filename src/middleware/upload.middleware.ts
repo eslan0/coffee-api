@@ -1,5 +1,11 @@
-import Multer from "@koa/multer";
+import { createMiddleware } from "hono/factory";
+export const verifyToken = createMiddleware(async (c, next) => {
+  console.log(`${c.req.method} ${c.req.path}`);
+  // Implementar verificação do token aqui.
+  await next();
+});
 
+import Multer from "@koa/multer";
 const storage = Multer.memoryStorage();
 
 // multir configuration

@@ -1,9 +1,11 @@
-import { Context, Next } from "koa";
+import { createMiddleware } from "hono/factory";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const verifyToken = async (ctx: Context, next: Next) => {
+export const verifyToken = createMiddleware(async (c, next) => {
+  console.log(`${c.req.method} ${c.req.path}`);
+
   try {
     const authHeader = ctx.headers.authorization;
 
@@ -27,4 +29,6 @@ export const verifyToken = async (ctx: Context, next: Next) => {
     ctx.status = 401;
     ctx.body = { message: "Invalid or expired token" };
   }
-};
+
+  await next();
+});

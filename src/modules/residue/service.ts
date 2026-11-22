@@ -1,4 +1,4 @@
-import Category from "@/modules/category";
+import Category from "@/modules/catalog";
 
 export class categoryService {
   static async findAll() {

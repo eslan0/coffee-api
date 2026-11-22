@@ -11,3 +11,8 @@ router.put("/sections/:id", verifyToken, isAdmin, SectionController.update);
 router.delete("/sections/:id", verifyToken, isAdmin, SectionController.delete);
 
 export default router;
+
+/*
+app.get('/', (c) => {
+  return c.text('Hello Hono!')
+})*/

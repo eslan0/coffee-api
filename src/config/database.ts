@@ -1,12 +1,12 @@
 import mongoose, { ConnectOptions, Error } from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import envConfig from "@/config/env";
+import { env } from "@/config/env";
 
 let mongoServer: MongoMemoryServer;
 
 // database connection function (real or in memory)
 const connectDB = async () => {
-  const useMemory = envConfig.USE_MEMORY_DB === "true";
+  const useMemory = env.USE_MEMORY_DB === "true";
 
   if (useMemory) {
     // using in-memory mongo for testing
@@ -23,7 +23,7 @@ const connectDB = async () => {
   } else {
     // using real mongo for production
     try {
-      const MONGO_URI = envConfig.MONGO_URI;
+      const MONGO_URI = env.MONGO_URI;
 
       if (!MONGO_URI) {
         // check if uri exists
@@ -36,26 +36,26 @@ const connectDB = async () => {
 
       // event listing
       mongoose.connection.on("connected", () => {
-        if (envConfig.NODE_ENV === "development") {
+        if (env.NODE_ENV === "development") {
           console.log("MongoDB database connection successfully established");
         }
       });
 
       mongoose.connection.on("reconnected", () => {
-        if (envConfig.NODE_ENV === "development") {
+        if (env.NODE_ENV === "development") {
           console.log("Mongo connection reestablished");
         }
       });
 
       mongoose.connection.on("error", (error: Error) => {
-        if (envConfig.NODE_ENV === "development") {
+        if (env.NODE_ENV === "development") {
           console.log("MongoDB connection error. Make sure MongoDB is running: ");
           console.log(`Mongo connection ERROR: ${error}`);
         }
       });
 
       mongoose.connection.on("disconnected", () => {
-        if (envConfig.NODE_ENV === "development") {
+        if (env.NODE_ENV === "development") {
           console.log("MongoDB database connection is disconnected...");
           console.log("Trying to reconnect to Mongo...");
         }
@@ -77,7 +77,7 @@ const connectDB = async () => {
           if (mongoose.connection.readyState === 1) {
             // if the connection is open close it
             await mongoose.connection.close();
-            if (envConfig.NODE_ENV === "development") {
+            if (env.NODE_ENV === "development") {
               console.log("MongoDB database connection was disconnected due to app closure...");
             }
           }

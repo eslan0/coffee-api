@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 dotenv.config({ quiet: true });
 
-const envConfig = {
+export const env = {
   MONGO_URI: process.env.MONGO_URI,
   USE_MEMORY_DB: process.env.USE_MEMORY_DB,
   TEST_ENV_MONGODB: process.env.TEST_ENV_MONGODB,
@@ -32,5 +32,3 @@ const envConfig = {
   CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
-
-export default envConfig;

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { verifyToken } from "@/middleware/auth.middleware";
 import { isAdmin } from "@/middleware/role.middleware";
-import { categoryController } from "@/modules/category";
+import { categoryController } from "@/modules/catalog";
 
 const categoryRoutes = new Hono();
 

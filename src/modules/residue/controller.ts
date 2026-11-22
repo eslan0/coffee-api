@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { categoryService } from "@/modules/category";
+import { categoryService } from "@/modules/catalog";
 
 export class categoryController {
   static async index(c: Context) {
